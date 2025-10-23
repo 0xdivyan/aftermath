@@ -16,7 +16,7 @@ An automated trading bot that capitalizes on post-earnings market inefficiencies
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/aftermath.git
+git clone https://github.com/0xdivyan/aftermath.git
 cd aftermath
 
 # Create virtual environment
