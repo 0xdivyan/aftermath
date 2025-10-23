@@ -136,4 +136,31 @@ class AftermathBot:
                 for ticker, event in list(self.tracked_events.items()):
                     time_diff = (event.earnings_date - now).total_seconds()
                     
-                    # Within
+                    # Within earnings window
+                    window = settings.earnings_check_window_minutes * 60
+                    if -window <= time_diff <= 0:
+                        logger.info(f"🔔 Earnings released for {ticker}!")
+                        await self.verify_and_trade(ticker)
+                        del self.tracked_events[ticker]
+                
+                # Refresh calendar periodically
+                await asyncio.sleep(settings.scan_interval_seconds)
+                
+            except Exception as e:
+                logger.error(f"Error in monitor loop: {e}")
+                await asyncio.sleep(10)
+    
+    async def run(self):
+        """Start the bot"""
+        self.is_running = True
+        
+        # Initial scan
+        await self.scan_upcoming_earnings()
+        
+        # Start monitoring
+        await self.monitor_loop()
+    
+    async def stop(self):
+        """Stop the bot gracefully"""
+        self.is_running = False
+        logger.info("Bot stopped")

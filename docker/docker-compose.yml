@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  aftermath-bot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aftermath
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - ../logs:/app/logs
+      - ../data:/app/data
+    ports:
+      - "8080:8080"  # Metrics port
+    networks:
+      - aftermath-network
+
+networks:
+  aftermath-network:
+    driver: bridge
